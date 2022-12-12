@@ -13,10 +13,15 @@ This project demonstrates a MUD and ECS model implementation of the classic Rock
 
 - MoveSet:
   - stores player move set: { string: rock, paper, scissors | default = rock}.
+- MoveSelected: 
+  - stores whether or not player has selected an action from the MoveSet: { bool: default = false }
 - Hearts: 
   - stores number of hearts left during a game of RPS: { int: default = 3}.
+- GamesPlayed:
+  - stores number of total games played: { int }
 - Wins:
   - stores number of total wins: {int: default = 0}.
+
 
 - GameStatus:
   - stores number to denote status of player in terms of matchmaking:
@@ -53,5 +58,19 @@ This project demonstrates a MUD and ECS model implementation of the classic Rock
 - StartGame(): starts a game of RPS against the two players:
   - reset MoveSet to rock (default).
   - reset Hearts to 3 (default).
-  - requests players to select a move.
-  
+
+- GameLoop(): game plays until one player loses all their hearts:
+  - wait for both players to select a move from MoveSet.
+  - set MoveSelected to true.
+  - when both players picked a move, MoveSet updates at the same time for both players.
+  - call SetWinner().
+  - reset MoveSelected to false
+  - loop back until one Player Hearts = 0.
+  - when player reaches 0 hearts, read CurrentOpponent and +1 to that player's Wins component. 
+  - add 1 to each players' GamesPlayed component.
+
+- SetWinner(): checks players' selected move in MoveSet to determine winner for each round.
+  - reads component value of MoveSet for each player
+  - compares to determine winner.
+  - subtracts one heart from loser's Heart component.
+  - does nothing in a tie.
